@@ -1,0 +1,29 @@
+{
+  "name": "Intern::Bookmark",
+  "author": "astj",
+  "source-url": "ssh://git@github.com/astj/p6-Intern-Bookmark.git",
+  "support": {
+    "source": "ssh://git@github.com/astj/p6-Intern-Bookmark.git"
+  },
+  "perl": "v6",
+  "build-depends": [
+    {
+      "": true
+    }
+  ],
+  "provides": {
+    "": [
+      
+    ]
+  },
+  "depends": [
+    {
+      "": true
+    }
+  ],
+  "test-depends": [
+    
+  ],
+  "description": "Study of perl6, according to Hatena-Textbook",
+  "version": "v0.0.0"
+}
