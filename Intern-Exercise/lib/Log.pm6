@@ -9,10 +9,10 @@ class Log {
 
     # composed from req
     has @!parsed-req =  split(' ', $!req, 3);
-    has $.method = @!parsed-req[0];
-    has $.path = @!parsed-req[1];
-    has $.protocol = @!parsed-req[2];
+    has Str $.method = @!parsed-req[0];
+    has Str $.path = @!parsed-req[1];
+    has Str $.protocol = @!parsed-req[2];
 
-    has $.uri = 'http://' ~ $!host ~ $!path;
-    has $.time = DateTime.new($!epoch).Str;
+    has Str $.uri = 'http://' ~ $!host ~ $!path;
+    has Str $.time = DateTime.new($!epoch).Str;
 }
