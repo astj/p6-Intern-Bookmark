@@ -1,8 +1,11 @@
 use v6;
 use Test;
 
-use-ok('Log');
+plan 6;
+
 use Log;
+
+use-ok('Log');
 
 my $log = Log.new(
     host    => '127.0.0.1',
@@ -19,5 +22,3 @@ is $log.path, '/apache_pb.gif';
 is $log.protocol, 'HTTP/1.0';
 is $log.uri, 'http://127.0.0.1/apache_pb.gif';
 is $log.time, '2013-07-01T15:59:50Z'; # last `Z` is not present p5's DateTime
-
-done-testing;
