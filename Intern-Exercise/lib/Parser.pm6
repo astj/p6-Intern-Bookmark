@@ -7,7 +7,7 @@ grammar LTSVLog {
 
 class LTSVRecordActions {
     method TOP   ($/) { $/.make: $<field>>>.made.Hash }
-    method field ($/) { $/.make: $<label>.Str => $<field-value>.Str }
+    method field ($/) { $/.make: $<field-value>.Str eq '-' ?? () !! $<label>.Str => $<field-value>.Str }
 }
 
 class Parser {
