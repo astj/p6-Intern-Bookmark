@@ -14,12 +14,9 @@ class Parser {
     use Log;
 
     has Str $.filename;
-    has @!lines;
-    has @!logs;
     method parse () {
         unless $!filename.IO.e { die; }
-        @!lines = $!filename.IO.lines;
-        @!logs = @!lines.map: {
+        $!filename.IO.lines.map: {
             my %ltsv-log = LTSVLog.parse($_, :actions(LTSVRecordActions)).made;
             Log.new:
                 :host(%ltsv-log<host>),
@@ -32,6 +29,5 @@ class Parser {
                 :size(+%ltsv-log<size>),
                 ;
         }
-        @!logs
     };
 }
