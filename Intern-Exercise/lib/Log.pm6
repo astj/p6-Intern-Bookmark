@@ -1,12 +1,15 @@
 class Log {
-    # Thos are all optional!!
-    has $.host;
-    has $.user;
-    has $.epoch;
-    has $.req;
-    has $.status;
-    has $.size;
-    has $.referer;
+    subset MaybeStr of Any where { !.defined || .WHAT ~~ Str }
+    subset MaybeInt of Any where { !.defined || .WHAT ~~ Int }
+
+    # Those are all optional!!
+    has MaybeStr $.host;
+    has MaybeStr $.user;
+    has MaybeInt $.epoch;
+    has MaybeStr $.req;
+    has MaybeInt $.status;
+    has MaybeInt $.size;
+    has MaybeStr $.referer;
 
     # composed from req
     has @!parsed-req =  split(' ', $!req, 3);
