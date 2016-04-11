@@ -19,14 +19,11 @@ class Log {
 
     method to-hash ( --> Hash ) {
         {
-            :host($.host),
             :user($.user),
             :status($.status),
             :size($.size),
             :referer($.referer),
             :method($.method),
-            :path($.path),
-            :protocol($.protocol),
             :uri($.uri),
             :time($.time),
         };
