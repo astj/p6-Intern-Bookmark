@@ -17,7 +17,7 @@ class Parser {
     has @!lines;
     has @!logs;
     method parse () {
-        # TODO error handling
+        unless $!filename.IO.e { die; }
         @!lines = $!filename.IO.lines;
         @!logs = @!lines.map: {
             my %ltsv-log = LTSVLog.parse($_, :actions(LTSVRecordActions)).made;

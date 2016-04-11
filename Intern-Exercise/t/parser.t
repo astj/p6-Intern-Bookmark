@@ -43,4 +43,6 @@ is-deeply @parsed[2].to-hash, {
     'uri' => 'http://127.0.0.1/apache_pb.gif'
 };
 
+dies-ok { Parser.new(:filename<./sample_data/NOT_FOUND.ltsv>).parse; };
+
 done-testing();
