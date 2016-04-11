@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 6;
+plan 7;
 
 use Log;
 
@@ -22,3 +22,16 @@ is $log.path, '/apache_pb.gif';
 is $log.protocol, 'HTTP/1.0';
 is $log.uri, 'http://127.0.0.1/apache_pb.gif';
 is $log.time, '2013-07-01T15:59:50Z'; # last `Z` is not present p5's DateTime
+
+is-deeply $log.to-hash, {
+    host     => '127.0.0.1',
+    user     => 'frank',
+    status   => 200,
+    size     => 2326,
+    referer  => 'http://www.hatena.ne.jp/',
+    method   => 'GET',
+    path     => '/apache_pb.gif',
+    protocol => 'HTTP/1.0',
+    uri      => 'http://127.0.0.1/apache_pb.gif',
+    time     => '2013-07-01T15:59:50Z',
+};
