@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 7;
+plan 8;
 
 use Log;
 
@@ -28,6 +28,20 @@ is-deeply $log.to-hash, {
     status   => 200,
     size     => 2326,
     referer  => 'http://www.hatena.ne.jp/',
+    method   => 'GET',
+    uri      => 'http://127.0.0.1/apache_pb.gif',
+    time     => '2013-07-01T15:59:50Z',
+};
+
+is-deeply Log.new(
+    host    => '127.0.0.1',
+    epoch   => 1372694390,
+    req     => 'GET /apache_pb.gif HTTP/1.0',
+    status  => 200,
+    size    => 2326,
+).to-hash, {
+    status   => 200,
+    size     => 2326,
     method   => 'GET',
     uri      => 'http://127.0.0.1/apache_pb.gif',
     time     => '2013-07-01T15:59:50Z',
