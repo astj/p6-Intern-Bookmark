@@ -36,7 +36,7 @@ is-deeply @parsed[1].to-hash, {
 };
 is-deeply @parsed[2].to-hash, {
     'status' => 503,
-    'time' => '2013-07-03T23:33:10',
+    'time' => '2013-07-03T23:33:10Z',
     'method' => 'GET',
     'referer' => 'http://www.example.com/start.html',
     'size' => 9999,
