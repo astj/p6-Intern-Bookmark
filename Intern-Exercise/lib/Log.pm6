@@ -1,15 +1,11 @@
 class Log {
-    subset MaybeStr of Any where { !.defined || .WHAT ~~ Str }
-    subset MaybeInt of Any where { !.defined || .WHAT ~~ Int }
-
-    # Those are all optional!!
-    has MaybeStr $.host;
-    has MaybeStr $.user;
-    has MaybeInt $.epoch;
-    has MaybeStr $.req;
-    has MaybeInt $.status;
-    has MaybeInt $.size;
-    has MaybeStr $.referer;
+    has Str $.host;
+    has Str $.user;
+    has Int $.epoch;
+    has Str $.req;
+    has Int $.status;
+    has Int $.size;
+    has Str $.referer;
 
     # composed from req
     has @!parsed-req =  split(' ', $!req, 3);
