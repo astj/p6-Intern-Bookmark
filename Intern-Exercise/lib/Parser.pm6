@@ -1,4 +1,4 @@
-grammar LTSVLog {
+grammar LTSVRecord {
     token TOP { <field>+%\t }
     token field { <label>\:<field-value> }
     token label { <[0..9A..Za..z_.-]>+ }
@@ -7,27 +7,24 @@ grammar LTSVLog {
 
 class LTSVRecordActions {
     method TOP   ($/) { $/.make: $<field>>>.made.Hash }
-    method field ($/) { $/.make: $<field-value>.Str eq '-' ?? () !! $<label>.Str => $<field-value>.Str }
+    method field ($/) { $/.make: $<field-value>.Str eq '-' ?? :{} !! :{$<label>.Str => $<field-value>.Str} }
 }
 
 class Parser {
     use Log;
 
     has Str $.filename;
+    constant $STR-LABELS = "host"|"user"|"req"|"referer";
+    constant $INT-LABELS = "epoch"|"status"|"size";
+    constant $ALL-LABELS = $STR-LABELS|$INT-LABELS;
     method parse () {
         unless $!filename.IO.e { die; }
         $!filename.IO.lines.map: {
-            my %ltsv-log = LTSVLog.parse($_, :actions(LTSVRecordActions)).made;
-            Log.new:
-                :host(%ltsv-log<host>),
-                :user(%ltsv-log<user>),
-                :req(%ltsv-log<req>),
-                :referer(%ltsv-log<referer>),
-                # numeric fields needs conversion
-                :epoch(+%ltsv-log<epoch>),
-                :status(+%ltsv-log<status>),
-                :size(+%ltsv-log<size>),
-                ;
+            my %ltsv-record = LTSVRecord.parse($_, :actions(LTSVRecordActions)).made;
+            # Drop undefined fields and convert numeric fields to construct an instance of Log
+            my %construct-params = %ltsv-record.grep({.key eq $ALL-LABELS}).map({ .key => (.key eq $INT-LABELS ?? +.value !! ~.value) });
+            # Use `|%FOO` to be treated as a named arguments
+            Log.new(|%construct-params);
         }
     };
 }
