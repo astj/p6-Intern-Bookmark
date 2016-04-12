@@ -16,6 +16,7 @@ class Log {
     has Str $.uri = 'http://' ~ $!host ~ $!path;
     # XXX In p5 exercise specified Str, but in p6 maybe we can keep DateTime..
     has Str $.time = DateTime.new($!epoch).Str;
+    has Str $.display-user-name = $!user // 'guest';
 
     constant @HASH-KEYS = qw/user status size referer method uri time/;
     method to-hash ( --> Hash ) {
