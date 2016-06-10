@@ -20,7 +20,7 @@ sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
         $dbh.prepare('INSERT INTO user (name, created) VALUES (?, ?)').execute($user-name, DateTime.now);
         my $sth = $dbh.prepare('SELECT user_id, name, created FROM user WHERE user_id = LAST_INSERT_ID()');
         $sth.execute;
-        $sth.row(:hash);
+        $row = $sth.row(:hash);
     }
     return Intern::Bookmark::Model::User.new(|$row); # Not good way?
 }
