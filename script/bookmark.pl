@@ -6,23 +6,12 @@ use Intern::Bookmark::Model::User;
 use Intern::Bookmark::Model::Entry;
 use Intern::Bookmark::Model::Bookmark;
 
+use Intern::Bookmark::Service::User;
+
 my $dbh = Intern::Bookmark::DBI.connect-to-db;
 
 sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
-    my $row = do {
-        my $sth = $dbh.prepare('SELECT user_id, name, created FROM user WHERE name = ?');
-        $sth.execute($user-name);
-        $sth.row(:hash);
-    };
-    unless $row {
-        say "User not found: $user-name";
-
-        $dbh.prepare('INSERT INTO user (name, created) VALUES (?, ?)').execute($user-name, DateTime.now);
-        my $sth = $dbh.prepare('SELECT user_id, name, created FROM user WHERE user_id = LAST_INSERT_ID()');
-        $sth.execute;
-        $row = $sth.row(:hash);
-    }
-    return Intern::Bookmark::Model::User.new(|$row); # Not good way?
+    return Intern::Bookmark::Service::User.find-or-create-user($dbh, $user-name);
 }
 
 # Maybe[Entry]
