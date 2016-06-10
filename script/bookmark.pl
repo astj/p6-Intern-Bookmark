@@ -2,12 +2,13 @@
 use v6;
 
 use Intern::Bookmark::DBI;
-use Intern::Bookmark::Model::User;
-use Intern::Bookmark::Model::Entry;
-use Intern::Bookmark::Model::Bookmark;
+#use Intern::Bookmark::Model::User;
+#use Intern::Bookmark::Model::Entry;
+#use Intern::Bookmark::Model::Bookmark;
 
 use Intern::Bookmark::Service::Entry;
 use Intern::Bookmark::Service::User;
+use Intern::Bookmark::Service::Bookmark;
 
 my $dbh = Intern::Bookmark::DBI.connect-to-db;
 
@@ -26,46 +27,28 @@ sub find-or-create-entry-by-url ($url --> Intern::Bookmark::Model::Entry) {
 
 # Maybe[Bookmark]
 sub find-bookmark (:user($user), :entry($entry) --> Intern::Bookmark::Model::Bookmark) {
-    my $sth = $dbh.prepare('
-      SELECT bookmark_id, user_id, entry_id, comment, created, updated
-             FROM bookmark
-             WHERE user_id = ? AND entry_id = ?
-    ');
-    $sth.execute($user.user_id, $entry.entry_id);
-    my $row = $sth.row(:hash);
-    return unless $row;
-    return Intern::Bookmark::Model::Bookmark.new(|$row);
+    return Intern::Bookmark::Service::Bookmark.find-by-user-and-entry(
+        $dbh, :$user, :$entry
+    );
 }
 
 sub create-or-update-bookmark (:user($user), :url($url), :comment($comment) --> Intern::Bookmark::Model::Bookmark) {
     my $entry = find-or-create-entry-by-url($url);
-    $comment //= '';
-
-    my $bookmark = find-bookmark(user => $user, entry => $entry);
-    if ($bookmark) {
-        my $sth = $dbh.prepare('
-          UPDATE bookmark SET comment = ?, updated = ?
-                 WHERE bookmark_id = ?
-        ');
-        $sth.execute($comment, DateTime.now, $bookmark.bookmark_id);
-    } else {
-        my $sth = $dbh.prepare('INSERT INTO bookmark (user_id, entry_id, comment, created, updated) VALUES (?, ?, ?, ?, ?)');
-        $sth.execute($user.user_id, $entry.entry_id, $comment, DateTime.now, DateTime.now);
-    }
-    return find-bookmark(user => $user, entry => $entry);
+    return Intern::Bookmark::Service::Bookmark.create-or-update(
+        $dbh, :$user, :$entry, :$comment
+    );
 }
 
-sub delete-bookmark-by-id ($bookmark_id!) {
-    my $sth = $dbh.prepare('DELETE FROM bookmark WHERE bookmark_id = ?');
-    $sth.execute($bookmark_id);
+sub delete-bookmark-by-id ($bookmark-id!) {
+    return Intern::Bookmark::Service::Bookmark.delete-by-id(
+        $dbh, :$bookmark-id
+    );
 }
 
 sub find-bookmarks-for-user ($user) {
-    my $sth = $dbh.prepare('SELECT * FROM bookmark WHERE user_id=?');
-    $sth.execute($user.user_id);
-
-    my @bookmarks = $sth.allrows(:array-of-hash).map({ Intern::Bookmark::Model::Bookmark.new(|$_) });
-    return @bookmarks;
+    return Intern::Bookmark::Service::Bookmark.search-by-user(
+        $dbh, :$user
+    );
 }
 
 sub find-entries (@entry-ids where *.elems > 0) {
