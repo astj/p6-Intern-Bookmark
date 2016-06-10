@@ -7,9 +7,6 @@
   },
   "perl": "v6",
   "build-depends": [
-    {
-      "": true
-    }
   ],
   "provides": {
     "": [
@@ -17,9 +14,7 @@
     ]
   },
   "depends": [
-    {
-      "": true
-    }
+    "DBIish"
   ],
   "test-depends": [
     
