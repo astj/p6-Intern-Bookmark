@@ -28,7 +28,9 @@ method find-or-create-entry-by-url(DBDish::Connection $dbh!, Str $url! --> Inter
     };
 }
 
-method find-entries (DBDish::Connection $dbh!, @entry-ids! where *.elems > 0) {
+method find-entries (DBDish::Connection $dbh!, @entry-ids!) {
+    return [] unless @entry-ids.elems;
+
     # If @entry-ids has 5 elems, it should be '?, ?, ?, ?, ?'
     my $placeholder = @entry-ids.map({"?"}).join(", ");
     my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )');
@@ -38,7 +40,7 @@ method find-entries (DBDish::Connection $dbh!, @entry-ids! where *.elems > 0) {
     return @entries;
 }
 
-method find-entries-and-embed-to-bookmarks (DBDish::Connection $dbh!, @bookmarks! where *.elems > 0) {
+method find-entries-and-embed-to-bookmarks (DBDish::Connection $dbh!, @bookmarks!) {
     my @entries = self.find-entries($dbh, @bookmarks.map({ $_.entry_id }));
     my %entries-by-entry-id = @entries.classify({ $_.entry_id });
 
