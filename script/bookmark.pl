@@ -85,6 +85,36 @@ sub delete-bookmark-by-id ($bookmark_id!) {
     $sth.execute($bookmark_id);
 }
 
+sub find-bookmarks-for-user ($user) {
+    my $sth = $dbh.prepare('SELECT * FROM bookmark WHERE user_id=?');
+    $sth.execute($user.user_id);
+
+    my @bookmarks = $sth.allrows(:array-of-hash).map({ Intern::Bookmark::Model::Bookmark.new(|$_) });
+    return @bookmarks;
+}
+
+sub find-entries (@entry-ids) {
+    return unless @entry-ids.elems;
+
+    # If @entry-ids has 5 elems, it should be '?, ?, ?, ?, ?'
+    my $placeholder = @entry-ids.map({"?"}).join(", ");
+
+    my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )');
+    $sth.execute(@entry-ids);
+
+    my @entries = $sth.allrows(:array-of-hash).map({ Intern::Bookmark::Model::Entry.new(|$_) });
+    return @entries;
+}
+
+sub find-entries-and-embed-to-bookmarks (@bookmarks) {
+    my @entries = find-entries(@bookmarks.map({ $_.entry_id }));
+    my %entries-by-entry-id = @entries.classify({ $_.entry_id });
+
+    for @bookmarks -> $bookmark {
+        $bookmark.entry = %entries-by-entry-id{$bookmark.entry_id}.first;
+    }
+}
+
 # -------------------------------------
 #  MAIN
 # -------------------------------------
@@ -101,7 +131,14 @@ multi MAIN($user-name, 'add', $url, $comment = '') {
 
 multi MAIN($user-name, 'list') {
     my $user = get-or-create-user($user-name);
-    say "hello";
+    my @bookmarks = find-bookmarks-for-user($user);
+    find-entries-and-embed-to-bookmarks(@bookmarks);
+
+    my constant $formatter = "%-30s\t%-25s\t%s";
+    say sprintf($formatter,'url', 'created', 'comment');
+    for @bookmarks -> $bookmark {
+        say sprintf($formatter, $bookmark.entry.url, $bookmark.created.local, $bookmark.comment);
+    }
 }
 
 multi MAIN($user-name, 'delete', $url) {
