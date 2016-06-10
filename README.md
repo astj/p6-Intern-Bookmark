@@ -2,6 +2,12 @@
 
 Ref: https://github.com/hatena/perl-Intern-Bookmark
 
+## CLI
+
+```
+perl6 -Ilib script/bookmark.pl
+```
+
 ## See also
 
 - Textbook: https://github.com/hatena/Hatena-Textbook
