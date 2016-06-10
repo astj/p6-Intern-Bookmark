@@ -6,6 +6,7 @@ use Intern::Bookmark::Model::User;
 use Intern::Bookmark::Model::Entry;
 use Intern::Bookmark::Model::Bookmark;
 
+use Intern::Bookmark::Service::Entry;
 use Intern::Bookmark::Service::User;
 
 my $dbh = Intern::Bookmark::DBI.connect-to-db;
@@ -16,26 +17,11 @@ sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
 
 # Maybe[Entry]
 sub find-entry-by-url ($url --> Intern::Bookmark::Model::Entry) {
-    my $row = do {
-        my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE url = ?');
-        $sth.execute($url);
-        $sth.row(:hash);
-    };
-    return unless $row;
-    return Intern::Bookmark::Model::Entry.new(|$row);
+    return Intern::Bookmark::Service::Entry.find-entry-by-url($dbh, $url);
 }
 
 sub find-or-create-entry-by-url ($url --> Intern::Bookmark::Model::Entry) {
-    my $entry = find-entry-by-url($url);
-
-    return $entry // do {
-        my $title = 'created by p6-intern-bookmark'; # TODO
-        $dbh.prepare('INSERT INTO entry (url, title, created, updated) VALUES (?, ?, ?, ?)').execute($url, $title, DateTime.now, DateTime.now);
-        my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id = LAST_INSERT_ID()');
-        $sth.execute;
-        my $row = $sth.row(:hash);
-        Intern::Bookmark::Model::Entry.new(|$row);
-    };
+    return Intern::Bookmark::Service::Entry.find-or-create-entry-by-url($dbh, $url);
 }
 
 # Maybe[Bookmark]
@@ -82,26 +68,12 @@ sub find-bookmarks-for-user ($user) {
     return @bookmarks;
 }
 
-sub find-entries (@entry-ids) {
-    return unless @entry-ids.elems;
-
-    # If @entry-ids has 5 elems, it should be '?, ?, ?, ?, ?'
-    my $placeholder = @entry-ids.map({"?"}).join(", ");
-
-    my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )');
-    $sth.execute(@entry-ids);
-
-    my @entries = $sth.allrows(:array-of-hash).map({ Intern::Bookmark::Model::Entry.new(|$_) });
-    return @entries;
+sub find-entries (@entry-ids where *.elems > 0) {
+    return Intern::Bookmark::Service::Entry.find-entries($dbh, @entry-ids);
 }
 
 sub find-entries-and-embed-to-bookmarks (@bookmarks) {
-    my @entries = find-entries(@bookmarks.map({ $_.entry_id }));
-    my %entries-by-entry-id = @entries.classify({ $_.entry_id });
-
-    for @bookmarks -> $bookmark {
-        $bookmark.entry = %entries-by-entry-id{$bookmark.entry_id}.first;
-    }
+    return Intern::Bookmark::Service::Entry.find-entries-and-embed-to-bookmarks($dbh, @bookmarks);
 }
 
 # -------------------------------------
