@@ -1,28 +1,12 @@
 #!/usr/bin/env perl6
 use v6;
 
-use DBIish;
+use Intern::Bookmark::DBI;
 use Intern::Bookmark::Model::User;
 use Intern::Bookmark::Model::Entry;
 use Intern::Bookmark::Model::Bookmark;
 
-my $dbh = DBIish.connect(
-    'mysql',
-    :host<localhost>,
-    :port(3306),
-    :database<intern_bookmark>,
-    :user<nobody>,
-    :password<nobody>,
-    :RaiseError
-);
-$dbh.do('SET NAMES utf8mb4');
-
-# refs: http://astj.hatenablog.com/entry/2016/06/10/234024
-my $tz =  sprintf '%s%02d:%02d',
-$*TZ < 0 ?? '-' !! '+',
-($*TZ.abs / 60 / 60).floor,
-($*TZ.abs / 60 % 60).floor;
-$dbh.do("SET time_zone = '$tz'");
+my $dbh = Intern::Bookmark::DBI.connect-to-db;
 
 sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
     my $row = do {
