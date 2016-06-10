@@ -2,6 +2,14 @@
 
 Ref: https://github.com/hatena/perl-Intern-Bookmark
 
+## setup
+
+```
+mysql -unobody -pnobody -e 'create database intern_bookmark;'
+mysql -unobody -pnobody intern_bookmark < db/schema.sql
+panda installdeps .
+```
+
 ## CLI
 
 ```
