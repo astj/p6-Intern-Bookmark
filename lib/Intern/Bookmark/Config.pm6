@@ -27,4 +27,3 @@ sub config-param (Str $key) is export {
     die "config '$key' is not found!" without $config{$key};
     return $config{$key};
 }
-
