@@ -14,7 +14,7 @@
     ]
   },
   "depends": [
-    "DBIish"
+    "DBIish", "YAMLish"
   ],
   "test-depends": [
     

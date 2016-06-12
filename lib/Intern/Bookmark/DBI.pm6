@@ -1,15 +1,17 @@
 use v6;
 unit class Intern::Bookmark::DBI;
 use DBIish;
+use Intern::Bookmark::Config;
 
 method connect-to-db ( --> DBDish::Connection) {
+    my %db-config = config-param('db');
     my $dbh = DBIish.connect(
         'mysql',
-        :host<localhost>,
-        :port(3306),
-        :database<intern_bookmark>,
-        :user<nobody>,
-        :password<nobody>,
+        :host(%db-config<host>),
+        :port(%db-config<port>),
+        :database(%db-config<database>),
+        :user(%db-config<user>),
+        :password(%db-config<password>),
         :RaiseError
     );
     $dbh.do('SET NAMES utf8mb4');
