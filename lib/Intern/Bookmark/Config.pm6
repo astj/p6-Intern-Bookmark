@@ -4,9 +4,6 @@ unit module Intern::Bookmark::Config;
 
 use YAMLish;
 
-my %config-declaretions;
-my %common-config;
-
 # /config/
 constant CONFIG-DIR = $?FILE.IO.parent.parent.parent.parent.child('config');
 constant CONFIG-ENV-NAME = 'INTERN_BOOKMARK_ENV';
