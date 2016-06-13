@@ -12,7 +12,7 @@ method find-or-create(DBDish::Connection $dbh!, Str $user-name! --> Intern::Book
     );
     unless $row {
         $dbh.query('INSERT INTO user (name, created) VALUES (?, ?)', $user-name, DateTime.now);
-        my $row = $dbh.retrieve-row('SELECT user_id, name, created FROM user WHERE user_id = LAST_INSERT_ID()');
+        $row = $dbh.retrieve-row('SELECT user_id, name, created FROM user WHERE user_id = LAST_INSERT_ID()');
     }
     return Intern::Bookmark::Model::User.new(|$row); # Not good way?
 }
