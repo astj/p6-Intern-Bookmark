@@ -12,13 +12,15 @@ use Intern::Bookmark::DBI;
 
 my $dbh = connect-to-db;
 
-$dbh.query('delete from user where name="testuser"');
+my $user-name = random-strings-by-length(15);
 
-my $user = Intern::Bookmark::Service::User.find-or-create($dbh, 'testuser');
+my $user = Intern::Bookmark::Service::User.find-or-create($dbh, $user-name);
 isa-ok $user, Intern::Bookmark::Model::User;
-is $user.name, 'testuser';
+is $user.name, $user-name;
 
-my $user-again = Intern::Bookmark::Service::User.find-or-create($dbh, 'testuser');
+my $user-again = Intern::Bookmark::Service::User.find-or-create($dbh, $user-name);
 isa-ok $user-again, Intern::Bookmark::Model::User;
-is $user-again.name, 'testuser';
+is $user-again.name, $user-name;
 is $user-again.created, $user.created, 'created is the same';
+
+$dbh.query("delete from user where name='$user-name'");
