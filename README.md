@@ -10,6 +10,13 @@ mysql -unobody -pnobody intern_bookmark < db/schema.sql
 panda installdeps .
 ```
 
+And for testing,
+
+```
+mysql -unobody -pnobody -e 'create database intern_bookmark_test;'
+mysql -unobody -pnobody intern_bookmark_test < db/schema.sql
+```
+
 ## CLI
 
 ```
