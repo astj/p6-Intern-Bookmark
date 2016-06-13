@@ -6,11 +6,7 @@ use Intern::Bookmark::Model::Entry;
 need DBDish::Connection;
 
 method find-entry-by-url(DBDish::Connection $dbh!, Str $url! --> Intern::Bookmark::Model::Entry) {
-    my $row = do {
-        my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE url = ?');
-        $sth.execute($url);
-        $sth.row(:hash);
-    };
+    my $row = $dbh.retrieve-row('SELECT entry_id, url, title, created, updated FROM entry WHERE url = ?', $url);
     return unless $row;
     return Intern::Bookmark::Model::Entry.new(|$row);
 }
@@ -20,10 +16,11 @@ method find-or-create-entry-by-url(DBDish::Connection $dbh!, Str $url! --> Inter
 
     return $entry // do {
         my $title = 'created by p6-intern-bookmark'; # TODO
-        $dbh.prepare('INSERT INTO entry (url, title, created, updated) VALUES (?, ?, ?, ?)').execute($url, $title, DateTime.now, DateTime.now);
-        my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id = LAST_INSERT_ID()');
-        $sth.execute;
-        my $row = $sth.row(:hash);
+        $dbh.query(
+            'INSERT INTO entry (url, title, created, updated) VALUES (?, ?, ?, ?)',
+            $url, $title, DateTime.now, DateTime.now
+        );
+        my $row = $dbh.retrieve-row('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id = LAST_INSERT_ID()');
         Intern::Bookmark::Model::Entry.new(|$row);
     };
 }
@@ -33,11 +30,10 @@ method find-entries (DBDish::Connection $dbh!, @entry-ids!) {
 
     # If @entry-ids has 5 elems, it should be '?, ?, ?, ?, ?'
     my $placeholder = @entry-ids.map({"?"}).join(", ");
-    my $sth = $dbh.prepare('SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )');
-    $sth.execute(@entry-ids);
-
-    my @entries = $sth.allrows(:array-of-hash).map({ Intern::Bookmark::Model::Entry.new(|$_) });
-    return @entries;
+    return $dbh.retrieve-allrows(
+        'SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )',
+        @entry-ids
+    ).map({ Intern::Bookmark::Model::Entry.new(|$_) });
 }
 
 method find-entries-and-embed-to-bookmarks (DBDish::Connection $dbh!, @bookmarks!) {

@@ -3,6 +3,25 @@ unit module Intern::Bookmark::DBI;
 use DBIish;
 use Intern::Bookmark::Config;
 
+# This role will be injected into DBDish connection!
+role ExtendedDBDishConnection {
+    method query(Str $statement, *@param --> DBDish::StatementHandle) {
+        my $sth = self.prepare($statement);
+        $sth.execute(@param);
+        $sth;
+    }
+
+    method retrieve-row(Str $statement, *@param --> Hash) {
+        my $sth = self.query($statement, @param);
+        return $sth.row(:hash);
+    }
+
+    method retrieve-allrows(Str $statement, *@param --> Seq) {
+        my $sth = self.query($statement, @param);
+        return $sth.allrows(:array-of-hash);
+    }
+}
+
 sub connect-to-db ( --> DBDish::Connection) is export {
     my %db-config = config-param('db');
     my $dbh = DBIish.connect(
@@ -13,7 +32,7 @@ sub connect-to-db ( --> DBDish::Connection) is export {
         :user(%db-config<user>),
         :password(%db-config<password>),
         :RaiseError
-    );
+    ) but ExtendedDBDishConnection;
     $dbh.do('SET NAMES utf8mb4');
 
     # ensure timezone is same as local
