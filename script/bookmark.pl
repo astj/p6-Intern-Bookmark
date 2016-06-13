@@ -10,7 +10,7 @@ use Intern::Bookmark::Service::Bookmark;
 my $dbh = connect-to-db;
 
 sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
-    return Intern::Bookmark::Service::User.find-or-create-user($dbh, $user-name);
+    return Intern::Bookmark::Service::User.find-or-create($dbh, $user-name);
 }
 
 # -------------------------------------
@@ -21,7 +21,7 @@ sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
 multi MAIN($user-name, 'add', $url, $comment = '') {
     my $user = get-or-create-user($user-name);
 
-    my $entry = Intern::Bookmark::Service::Entry.find-or-create-entry-by-url($dbh, $url);
+    my $entry = Intern::Bookmark::Service::Entry.find-or-create-by-url($dbh, $url);
     my $bookmark =  Intern::Bookmark::Service::Bookmark.create-or-update(
         $dbh, :$user, :$entry, :$comment
     );
@@ -35,7 +35,7 @@ multi MAIN($user-name, 'list') {
         $dbh, :$user
     );
 
-    Intern::Bookmark::Service::Entry.find-entries-and-embed-to-bookmarks($dbh, @bookmarks);
+    Intern::Bookmark::Service::Entry.search-by-ids-and-embed-to-bookmarks($dbh, @bookmarks);
 
     my constant $formatter = "%-30s\t%-25s\t%s";
     say sprintf($formatter,'url', 'created', 'comment');
@@ -47,7 +47,7 @@ multi MAIN($user-name, 'list') {
 multi MAIN($user-name, 'delete', $url) {
     my $user = get-or-create-user($user-name);
 
-    my $entry = Intern::Bookmark::Service::Entry.find-entry-by-url($dbh, $url);
+    my $entry = Intern::Bookmark::Service::Entry.find-by-url($dbh, $url);
     without $entry {
         say 'No entry found for' ~ $url;
         return;

@@ -5,7 +5,7 @@ unit class Intern::Bookmark::Service::User;
 use Intern::Bookmark::Model::User;
 need DBDish::Connection;
 
-method find-or-create-user(DBDish::Connection $dbh!, Str $user-name! --> Intern::Bookmark::Model::User) {
+method find-or-create(DBDish::Connection $dbh!, Str $user-name! --> Intern::Bookmark::Model::User) {
     my $row = $dbh.retrieve-row(
         'SELECT user_id, name, created FROM user WHERE name = ?',
         $user-name
