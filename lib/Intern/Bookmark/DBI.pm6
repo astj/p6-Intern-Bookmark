@@ -1,9 +1,9 @@
 use v6;
-unit class Intern::Bookmark::DBI;
+unit module Intern::Bookmark::DBI;
 use DBIish;
 use Intern::Bookmark::Config;
 
-method connect-to-db ( --> DBDish::Connection) {
+sub connect-to-db ( --> DBDish::Connection) is export {
     my %db-config = config-param('db');
     my $dbh = DBIish.connect(
         'mysql',
@@ -18,13 +18,13 @@ method connect-to-db ( --> DBDish::Connection) {
 
     # ensure timezone is same as local
     # refs: http://astj.hatenablog.com/entry/2016/06/10/234024
-    my $tz = self.timezone-from-offset($*TZ);
+    my $tz = timezone-from-offset($*TZ);
     $dbh.do("SET time_zone = '$tz'");
 
     $dbh;
 }
 
-method timezone-from-offset (Int $offset --> Str) {
+sub timezone-from-offset (Int $offset --> Str) {
     sprintf '%s%02d:%02d',
     $offset < 0 ?? '-' !! '+',
     ($offset.abs / 60 / 60).floor,

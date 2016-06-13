@@ -7,7 +7,7 @@ use Intern::Bookmark::Service::Entry;
 use Intern::Bookmark::Service::User;
 use Intern::Bookmark::Service::Bookmark;
 
-my $dbh = Intern::Bookmark::DBI.connect-to-db;
+my $dbh = connect-to-db;
 
 sub get-or-create-user ($user-name --> Intern::Bookmark::Model::User) {
     return Intern::Bookmark::Service::User.find-or-create-user($dbh, $user-name);
