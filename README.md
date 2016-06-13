@@ -16,6 +16,12 @@ panda installdeps .
 perl6 -Ilib script/bookmark.pl
 ```
 
+## Testing
+
+```
+prove --exec 'perl6 -Ilib -It/lib' -vr t
+```
+
 ## See also
 
 - Textbook: https://github.com/hatena/Hatena-Textbook
