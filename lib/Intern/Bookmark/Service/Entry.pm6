@@ -41,6 +41,7 @@ method search-by-ids-and-embed-to-bookmarks (DBDish::Connection $dbh!, @bookmark
     my %entries-by-entry-id = @entries.classify({ $_.entry_id });
 
     for @bookmarks -> $bookmark {
-        $bookmark.entry = %entries-by-entry-id{$bookmark.entry_id}.first;
+        my $entry = %entries-by-entry-id{$bookmark.entry_id}.first;
+        $bookmark.entry = $entry if $entry.defined;
     }
 }
