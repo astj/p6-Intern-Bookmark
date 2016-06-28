@@ -13,8 +13,8 @@ use Intern::Bookmark::Model::Bookmark;
 
 my $dbh = connect-to-db;
 
-my $url1 = 'http://' ~ random-strings-by-length(15) ~ '.com/' ~ random-strings-by-length(5);
-my $url2 = 'http://' ~ random-strings-by-length(15) ~ '.com/' ~ random-strings-by-length(5);
+my $url1 = random-url;
+my $url2 = random-url;
 
 ##### find-by-url, find-or-create-by-url
 my $entry-notfound = Intern::Bookmark::Service::Entry.find-by-url($dbh, $url1);
