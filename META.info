@@ -14,7 +14,7 @@
     ]
   },
   "depends": [
-    "DBIish", "YAMLish"
+    "DBIish", "YAMLish", "Crust", "Router::Boost"
   ],
   "test-depends": [
     

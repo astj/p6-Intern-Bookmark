@@ -23,6 +23,12 @@ mysql -unobody -pnobody intern_bookmark_test < db/schema.sql
 perl6 -Ilib script/bookmark.pl
 ```
 
+## Web
+
+```
+crustup -Ilib script/app.p6sgi
+```
+
 ## Testing
 
 ```

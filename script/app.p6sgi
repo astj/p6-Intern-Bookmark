@@ -1,0 +1,5 @@
+use v6;
+
+use Intern::Bookmark::Web;
+
+intern-bookmark-web-psgi;
