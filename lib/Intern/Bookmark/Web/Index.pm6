@@ -4,7 +4,9 @@ use Crust::Request;
 use Crust::Response;
 use HTTP::Headers;
 use Intern::Bookmark::Web::Response;
+use Intern::Bookmark::View::Mustache;
 
 method index (Crust::Request $req!, %match --> Crust::Response) {
-    Intern::Bookmark::Web::Response.text-response("this is dispatched engine\n");
+    my $body = Intern::Bookmark::View::Mustache.render('index', {:message<Hello, Mustache>});
+    Intern::Bookmark::Web::Response.html-response($body);
 }

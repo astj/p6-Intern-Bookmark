@@ -18,7 +18,8 @@
     "YAMLish",
     "Crust",
     "Router::Boost",
-    "HTTP::Headers"
+    "HTTP::Headers",
+    "Template::Mustache"
   ],
   "test-depends": [
     

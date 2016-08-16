@@ -6,6 +6,7 @@ use HTTP::Headers;
 has Int $.status = 200;
 has HTTP::Headers $.headers = HTTP::Headers.new;
 
+### constructors
 method text-response(Str $text) {
     my $res = self.new(:body([$text]));
     $res.headers.Content-Type = 'text/plain';
@@ -13,6 +14,14 @@ method text-response(Str $text) {
     $res;
 }
 
+method html-response(Str $text) {
+    my $res = self.new(:body([$text]));
+    $res.headers.Content-Type = 'text/html';
+
+    $res;
+}
+
+### instance method
 method finalize() {
     return $.status, $.headers.for-P6SGI, $.body;
 }
