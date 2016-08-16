@@ -3,6 +3,7 @@ unit module Intern::Bookmark::Web;
 use Crust::Request;
 use Crust::Response;
 use Router::Boost;
+use Intern::Bookmark::Web::Response;
 
 my class Intern::Bookmark::Web::Exception {
     method notfound (Crust::Request $req! --> Crust::Response) {
@@ -23,11 +24,11 @@ constant ROUTER = {
 sub intern-bookmark-web-psgi (--> Block) is export {
     -> $env {
         my $req = Crust::Request.new($env);
-        handle_request($req).finalize
+        handle-request($req).finalize
     };
 }
 
-sub handle_request (Crust::Request $req! --> Crust::Response) {
+sub handle-request (Crust::Request $req! --> Crust::Response) {
     my $match = ROUTER.match($req.path-info);
 
     without $match<stuff> {
@@ -36,5 +37,10 @@ sub handle_request (Crust::Request $req! --> Crust::Response) {
 
     my ($package, $method) = $match<stuff>;
     require ::($package); # maybe this runtime load is SO slow
-    return ::($package)."$method"($req, $match<captured>);
+
+    # To modify headers, Intern::Bookmark::Web::Response is necessary
+    my Intern::Bookmark::Web::Response $res = ::($package)."$method"($req, $match<captured>);
+    $res.headers.header("X-Dispatch") = $package ~ '#' ~ $method;
+
+    $res;
 }
