@@ -3,7 +3,15 @@ unit class Intern::Bookmark::Web::Response is Crust::Response;
 
 use HTTP::Headers;
 
+has Int $.status = 200;
 has HTTP::Headers $.headers = HTTP::Headers.new;
+
+method text-response(Str $text) {
+    my $res = self.new(:body([$text]));
+    $res.headers.Content-Type = 'text/plain';
+
+    $res;
+}
 
 method finalize() {
     return $.status, $.headers.for-P6SGI, $.body;
