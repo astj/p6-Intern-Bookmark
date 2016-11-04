@@ -24,8 +24,3 @@ is $user-again.name, $user-name;
 is $user-again.created, $user.created, 'created is the same';
 
 $dbh.query("delete from user where name='$user-name'");
-
-my $guest = Intern::Bookmark::Service::User.guest-user();
-is $guest.name, "guest";
-ok !$guest.user_id.defined;
-ok !$guest.created.defined;
