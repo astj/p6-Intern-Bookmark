@@ -30,4 +30,13 @@ is $html-ok.body, 'some html';
 is $html-ok.status, 200;
 is $html-ok.headers.Content-Type, 'text/html';
 
+my $error404 = Intern::Bookmark::Web::Response.error-response(404);
+is $error404.body, 'Not Found';
+is $error404.status, 404;
+is $error404.headers.Content-Type, 'text/plain';
+
+my $error-custom-body = Intern::Bookmark::Web::Response.error-response(400, 'Oops, 400...');
+is $error-custom-body.body, 'Oops, 400...';
+is $error-custom-body.status, 400;
+
 done-testing;

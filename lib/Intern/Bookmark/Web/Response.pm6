@@ -2,6 +2,7 @@ need Crust::Response;
 unit class Intern::Bookmark::Web::Response;
 
 use HTTP::Headers;
+use HTTP::Status;
 
 has Array $.body;
 has Int $.status = 200;
@@ -18,6 +19,15 @@ method text-response(Str $text) {
 method html-response(Str $text) {
     my $res = self.new(:body([$text]));
     $res.headers.Content-Type = 'text/html';
+
+    $res;
+}
+
+method error-response(Int $status, Str $text?){
+    my $body = $text // get_http_status_msg($status);
+
+    my $res = self.new(:status($status), :body([$body]));
+    $res.headers.Content-Type = 'text/plain';
 
     $res;
 }
