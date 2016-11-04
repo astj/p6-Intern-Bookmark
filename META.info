@@ -17,6 +17,7 @@
     "DBIish",
     "YAMLish",
     "Crust",
+    "Crust::Middleware::Session",
     "Router::Boost",
     "HTTP::Headers",
     "Template::Mustache"

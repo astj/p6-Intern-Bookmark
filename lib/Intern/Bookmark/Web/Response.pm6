@@ -23,7 +23,8 @@ method html-response(Str $text) {
 
 ### instance method
 method finalize() {
-    return $.status, $.headers.for-P6SGI, $.body;
+    # XXX Crust::Middleware::Session requires headers to be an Array, but HTTP::Headers#for-P6SGI is Seq
+    return $.status, Array.new($.headers.for-P6SGI), $.body;
 }
 
 =begin pod

@@ -1,6 +1,7 @@
 unit module Intern::Bookmark::Web;
 
 use Crust::Builder;
+use Crust::Middleware::Session;
 use Crust::Request;
 use Crust::Response;
 use Router::Boost;
@@ -28,9 +29,12 @@ sub intern-bookmark-web-psgi is export {
         handle-request($req).finalize
     };
 
+    my $store = Crust::Middleware::Session::Store::Memory.new();
+
     builder {
         enable "AccessLog", format => "combined";
         enable "ContentLength";
+        enable 'Session', :store($store);
         $app;
     };
 }

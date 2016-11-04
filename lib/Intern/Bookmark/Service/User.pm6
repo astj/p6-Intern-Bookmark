@@ -16,3 +16,7 @@ method find-or-create(DBDish::Connection $dbh!, Str $user-name! --> Intern::Book
     }
     return Intern::Bookmark::Model::User.new(|$row); # Not good way?
 }
+
+method guest-user(--> Intern::Bookmark::Model::User) {
+    Intern::Bookmark::Model::User.new(:name<guest>);
+}
