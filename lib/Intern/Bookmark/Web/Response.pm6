@@ -1,8 +1,9 @@
 need Crust::Response;
-unit class Intern::Bookmark::Web::Response is Crust::Response;
+unit class Intern::Bookmark::Web::Response;
 
 use HTTP::Headers;
 
+has Array $.body;
 has Int $.status = 200;
 has HTTP::Headers $.headers = HTTP::Headers.new;
 
