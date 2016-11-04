@@ -23,9 +23,9 @@ method html-response(Str $text) {
 }
 
 ### instance method
-method finalize() {
+method crustify() {
     # XXX Crust::Middleware::Session requires headers to be an Array, but HTTP::Headers#for-P6SGI is Seq
-    return $.status, Array.new($.headers.for-P6SGI), $.body;
+    Crust::Response.new(:status($.status), :headers(Array.new($.headers.for-P6SGI)), :body($.body));
 }
 
 =begin pod

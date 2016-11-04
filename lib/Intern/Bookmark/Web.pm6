@@ -53,5 +53,5 @@ sub handle-request (Crust::Request $req! --> Crust::Response) {
     my Intern::Bookmark::Web::Response $res = ::($package)."$method"($req, $match<captured>);
     $res.headers.header("X-Dispatch") = $package ~ '#' ~ $method;
 
-    $res;
+    $res.crustify;
 }

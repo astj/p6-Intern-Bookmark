@@ -4,6 +4,7 @@ use InternTest;
 
 use Intern::Bookmark::Web::Response;
 use HTTP::Headers;
+use Crust::Response;
 
 use-ok('Intern::Bookmark::Web::Response');
 
@@ -13,7 +14,10 @@ use-ok('Intern::Bookmark::Web::Response');
     $headers.header("Foo") = "bar";
     my $normal = Intern::Bookmark::Web::Response.new(:body(['hello']), :headers($headers), :status(303));
 
-    is $normal.finalize, [303, Array.new($headers.for-P6SGI), ['hello']];
+    my Crust::Response $crustified = $normal.crustify;
+    is $crustified.body, $normal.body;
+    is $crustified.status, $normal.status;
+    is $crustified.headers, Array.new($headers.for-P6SGI);
 }
 
 my $plain-ok = Intern::Bookmark::Web::Response.text-response('foobar');
