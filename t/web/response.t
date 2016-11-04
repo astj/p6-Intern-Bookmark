@@ -39,4 +39,8 @@ my $error-custom-body = Intern::Bookmark::Web::Response.error-response(400, 'Oop
 is $error-custom-body.body, 'Oops, 400...';
 is $error-custom-body.status, 400;
 
+my $redirect = Intern::Bookmark::Web::Response.redirect-response(302, 'http://example.com/');
+is $redirect.status, 302;
+is $redirect.headers.Location, 'http://example.com/';
+
 done-testing;

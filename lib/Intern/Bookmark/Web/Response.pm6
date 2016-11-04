@@ -32,6 +32,13 @@ method error-response(Int $status, Str $text?){
     $res;
 }
 
+method redirect-response(Int $status, Str $location){
+    my $res = self.new(:status($status));
+    $res.headers.Location = $location;
+
+    $res;
+}
+
 ### instance method
 method crustify() {
     # XXX Crust::Middleware::Session requires headers to be an Array, but HTTP::Headers#for-P6SGI is Seq
