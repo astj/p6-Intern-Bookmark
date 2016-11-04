@@ -2,7 +2,7 @@ use v6;
 use Test;
 use InternTest;
 
-plan 9;
+plan 6;
 
 use Intern::Bookmark::Service::User;
 
