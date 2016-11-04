@@ -1,5 +1,6 @@
 unit module Intern::Bookmark::Web;
 
+use Crust::Builder;
 use Crust::Request;
 use Crust::Response;
 use Router::Boost;
@@ -21,10 +22,16 @@ constant ROUTER = {
     $router;
 }();
 
-sub intern-bookmark-web-psgi (--> Block) is export {
-    -> $env {
+sub intern-bookmark-web-psgi is export {
+    my $app = -> $env {
         my $req = Crust::Request.new($env);
         handle-request($req).finalize
+    };
+
+    builder {
+        enable "AccessLog", format => "combined";
+        enable "ContentLength";
+        $app;
     };
 }
 
