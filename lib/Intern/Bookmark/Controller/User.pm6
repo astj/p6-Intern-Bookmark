@@ -1,7 +1,6 @@
 unit class Intern::Bookmark::Controller::User;
 
-use Crust::Request;
-use Crust::Response;
+need Crust::Request;
 use Intern::Bookmark::Service::User;
 use Intern::Bookmark::Web::Response;
 use Intern::Bookmark::View::Mustache;
