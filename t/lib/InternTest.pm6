@@ -2,7 +2,7 @@ use v6;
 
 unit module InternTest;
 
-BEGIN {
+INIT {
     %*ENV<INTERN_BOOKMARK_ENV> = 'test';
 }
 
