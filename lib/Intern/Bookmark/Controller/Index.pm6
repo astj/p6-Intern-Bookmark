@@ -2,7 +2,6 @@ unit class Intern::Bookmark::Controller::Index;
 
 use Crust::Request;
 use Crust::Response;
-use HTTP::Headers;
 use Intern::Bookmark::Web::Response;
 use Intern::Bookmark::View::Mustache;
 use Intern::Bookmark::Web::Helper;

@@ -52,7 +52,7 @@ sub handle-request (Crust::Request $req! --> Crust::Response) {
 
     # To modify headers, Intern::Bookmark::Web::Response is necessary
     my Intern::Bookmark::Web::Response $res = ::($package)."$method"($req, $match<captured>);
-    $res.headers.header("X-Dispatch") = $package ~ '#' ~ $method;
+    $res.headers.field(:X-Dispatch( $package ~ '#' ~ $method));
 
     $res.crustify;
 }

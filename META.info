@@ -19,7 +19,6 @@
     "Crust",
     "Crust::Middleware::Session",
     "Router::Boost",
-    "HTTP::Headers",
     "HTTP::Status",
     "Template::Mustache"
   ],
