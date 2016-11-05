@@ -1,4 +1,4 @@
-unit class Intern::Bookmark::Web::User;
+unit class Intern::Bookmark::Controller::User;
 
 use Crust::Request;
 use Crust::Response;
