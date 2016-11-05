@@ -33,7 +33,7 @@ method error-response(Int $status, Str $text?){
 }
 
 method redirect-response(Int $status, Str $location){
-    my $res = self.new(:status($status));
+    my $res = self.new(:status($status), :body(['']));
     $res.headers.field(:Location($location));
 
     $res;
