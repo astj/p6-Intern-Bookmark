@@ -35,7 +35,7 @@ sub intern-bookmark-web-psgi is export {
     builder {
         enable "AccessLog", format => "combined";
         enable "ContentLength";
-        enable 'Session', :store($store);
+        enable 'Session', :store($store), :cookie-name("intern_bookmark_session");
         $app;
     };
 }
