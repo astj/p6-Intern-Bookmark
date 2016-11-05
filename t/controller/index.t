@@ -12,9 +12,9 @@ my $test = Crust::Test.create(intern-bookmark-web-psgi);
     my $res = $test.request(HTTP::Request.new(GET => "/"));
     ok $res.decoded-content.index("Guest !").defined;
     ok $res.decoded-content.index(q|<a href="/login">|).defined;
+    is $res.field('X-Dispatch'), 'Intern::Bookmark::Controller::Index#index';
 }
 
 # TODO How can we create request with login session? Do POST?
 
-ok 1;
 done-testing;
