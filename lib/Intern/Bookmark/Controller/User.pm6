@@ -9,8 +9,9 @@ use Intern::Bookmark::DBI;
 
 method login (Crust::Request $req!, %match --> Intern::Bookmark::Web::Response) {
     given $req.method {
-        when 'GET'  { self.login_form($req, %match); }
-        when 'POST' { self.do_login($req, %match); }
+        when 'GET'|'HEAD' { self.login_form($req, %match); }
+        when 'POST'       { self.do_login($req, %match); }
+        default           { Intern::Bookmark::Web::Response.error-response(405); }
     }
 }
 
