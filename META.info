@@ -20,7 +20,7 @@
     "Crust::Middleware::Session",
     "Router::Boost",
     "HTTP::Status",
-    "Template::Mustache"
+    "Template6"
   ],
   "test-depends": [
     

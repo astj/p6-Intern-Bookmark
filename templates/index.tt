@@ -4,15 +4,14 @@
   </head>
   <body>
     <h1>Intern Bookmark</h1>
-    {{#visitor}}
-    <p>Hello, {{visitor.name}} !</p>
+    [% if visitor %]
+    <p>Hello, [% visitor.name %] !</p>
     <p><a href="/logout">You can logout! (TODO)</a></p>
-    {{/visitor}}
-    {{^visitor}}
+    [% else %]
     <p>Hello, Guest !</p>
     <p><a href="/login">You can login!</a></p>
-    {{/visitor}}
-    <p>{{message}}</p>
+    [% end %]
+    <p>[% message %]</p>
   </body>
 </html>
 
