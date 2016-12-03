@@ -3,7 +3,7 @@ unit class Intern::Bookmark::Controller::User;
 need Crust::Request;
 use Intern::Bookmark::Service::User;
 use Intern::Bookmark::Web::Response;
-use Intern::Bookmark::View::Mustache;
+use Intern::Bookmark::View::Template6;
 use Intern::Bookmark::Web::Helper;
 use Intern::Bookmark::DBI;
 
@@ -19,7 +19,7 @@ method login_form (Crust::Request $req!, %match --> Intern::Bookmark::Web::Respo
     my $dbh = connect-to-db;
     my $visitor = visitor($req, $dbh);
 
-    my $body = Intern::Bookmark::View::Mustache.render(
+    my $body = Intern::Bookmark::View::Template6.render(
         'login', {}
     );
     Intern::Bookmark::Web::Response.html-response($body);
