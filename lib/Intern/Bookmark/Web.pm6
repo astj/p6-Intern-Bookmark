@@ -20,8 +20,9 @@ my class Intern::Bookmark::Web::Exception {
 
 constant ROUTER = {
     my $router = Router::Boost.new();
-    $router.add('/',      ['Intern::Bookmark::Controller::Index', 'index']);
-    $router.add('/login', ['Intern::Bookmark::Controller::User',  'login']);
+    $router.add('/',          ['Intern::Bookmark::Controller::Index',    'index']);
+    $router.add('/login',     ['Intern::Bookmark::Controller::User',     'login']);
+    $router.add('/bookmarks', ['Intern::Bookmark::Controller::Bookmark', 'list']);
     $router;
 }();
 

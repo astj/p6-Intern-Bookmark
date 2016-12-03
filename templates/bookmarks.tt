@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Intern::Bookmark::Bookmark - Your bookmarks</title>
+  </head>
+  <body>
+    <h1>Your Bookmarks</h1>
+    <ol>
+      [% for bookmark in bookmarks %]
+      <li>
+        [% bookmark.entry.url %] -
+        [% bookmark.comment %]
+        <a href="/bookmark/add?url=[% bookmark.entry.url %]">edit</a>
+        <a href="/bookmark/delete?url=[% bookmark.entry.url %]">delete</a>
+      </li>
+      [% end %]
+    </ol>
+  </body>
+</html>
+
