@@ -10,8 +10,8 @@ use Intern::Bookmark::DBI;
 
 method list (Crust::Request $req!, %match --> Intern::Bookmark::Web::Response) {
     given $req.method {
-        when 'GET' { self.do_list($req, %match); }
-        default    { Intern::Bookmark::Web::Response.error-response(405); }
+        when 'GET'|'HEAD' { self.do_list($req, %match); }
+        default           { Intern::Bookmark::Web::Response.error-response(405); }
     }
 }
 
