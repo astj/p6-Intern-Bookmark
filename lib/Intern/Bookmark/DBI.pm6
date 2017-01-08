@@ -2,6 +2,8 @@ use v6;
 unit module Intern::Bookmark::DBI;
 use DBIish;
 use Intern::Bookmark::Config;
+need DBDish::StatementHandle;
+need DBDish::Connection;
 
 # This role will be injected into DBDish connection!
 role ExtendedDBDishConnection {

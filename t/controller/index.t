@@ -5,6 +5,7 @@ use InternTest;
 use Intern::Bookmark::Web;
 
 use Crust::Test;
+use HTTP::Request;
 
 my $test = Crust::Test.create(intern-bookmark-web-psgi);
 
