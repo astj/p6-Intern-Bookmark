@@ -6,6 +6,7 @@ use Crust::Request;
 use Crust::Response;
 use Router::Boost;
 use Intern::Bookmark::Web::Response;
+use MONKEY-SEE-NO-EVAL;
 
 my class Intern::Bookmark::Web::Exception {
     method notfound (Crust::Request $req! --> Crust::Response) {
@@ -48,7 +49,9 @@ sub handle-request (Crust::Request $req! --> Crust::Response) {
     }
 
     my ($package, $method) = $match<stuff>;
-    require ::($package); # maybe this runtime load is SO slow
+    # FIXME: https://rt.perl.org/Public/Bug/Display.html?id=130535
+    # related: https://github.com/tokuhirom/p6-Crust/pull/85
+    EVAL "use $package"; # maybe this runtime load is SO slow
 
     # To modify headers, Intern::Bookmark::Web::Response is necessary
     my Intern::Bookmark::Web::Response $res = ::($package)."$method"($req, $match<captured>);
