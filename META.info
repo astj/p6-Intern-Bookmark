@@ -20,7 +20,8 @@
     "Crust::Middleware::Session",
     "Router::Boost",
     "HTTP::Status",
-    "Template6"
+    "Template6",
+    "SQL::NamedPlaceholder"
   ],
   "test-depends": [
     
