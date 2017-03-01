@@ -31,8 +31,8 @@ method search-by-ids (DBDish::Connection $dbh!, @entry-ids!) {
     # If @entry-ids has 5 elems, it should be '?, ?, ?, ?, ?'
     my $placeholder = @entry-ids.map({"?"}).join(", ");
     return $dbh.retrieve-allrows(
-        'SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( ' ~ $placeholder ~ ' )',
-        @entry-ids
+        'SELECT entry_id, url, title, created, updated FROM entry WHERE entry_id IN ( :entry_id )',
+        {:entry_id(@entry-ids)}
     ).map({ Intern::Bookmark::Model::Entry.new(|$_) });
 }
 

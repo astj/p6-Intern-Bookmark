@@ -10,7 +10,7 @@ method find-by-user-and-entry (DBDish::Connection $dbh!, :$user, :$entry --> Int
         'SELECT bookmark_id, user_id, entry_id, comment, created, updated
                 FROM bookmark
                 WHERE user_id = ? AND entry_id = ?',
-        $user.user_id, $entry.entry_id
+        { user_id => $user.user_id, entry_id => $entry.entry_id }
     );
     return unless $row;
     return Intern::Bookmark::Model::Bookmark.new(|$row);

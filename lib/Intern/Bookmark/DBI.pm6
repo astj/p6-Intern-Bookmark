@@ -1,7 +1,10 @@
 use v6;
 unit module Intern::Bookmark::DBI;
 use DBIish;
+use SQL::NamedPlaceholder;
+
 use Intern::Bookmark::Config;
+
 need DBDish::StatementHandle;
 need DBDish::Connection;
 
@@ -13,12 +16,25 @@ role ExtendedDBDishConnection {
         $sth;
     }
 
-    method retrieve-row(Str $statement, *@param --> Hash) {
+    multi method retrieve-row(Str $statement, %params --> Hash) {
+        my ($sql, $bind) = bind-named($statement, %params);
+        my $sth = self.query($sql, |$bind);
+        return $sth.row(:hash);
+    }
+
+    multi method retrieve-allrows(Str $statement, %params --> Seq) {
+        my ($sql, $bind) = bind-named($statement, %params);
+        my $sth = self.query($sql, |$bind);
+        return $sth.allrows(:array-of-hash);
+    }
+
+    # deprecated
+    multi method retrieve-row(Str $statement, *@param --> Hash) {
         my $sth = self.query($statement, @param);
         return $sth.row(:hash);
     }
 
-    method retrieve-allrows(Str $statement, *@param --> Seq) {
+    multi method retrieve-allrows(Str $statement, *@param --> Seq) {
         my $sth = self.query($statement, @param);
         return $sth.allrows(:array-of-hash);
     }
